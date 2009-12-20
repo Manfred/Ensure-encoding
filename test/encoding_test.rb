@@ -22,25 +22,25 @@ class EncodingTest < ActiveSupport::TestCase
   
   test "source reports wrong encoding but is actually preferred encoding" do
     example = example('utf_8', :read_as => 'US-ASCII')
-    example.ensure_encoding!('UTF-8')
+    example.ensure_encoding('UTF-8')
     assert_equal '℻', example
   end
   
   test "source has the wrong encoding but reports the correct encoding" do
     example = example('iso_8859_1', :read_as => 'ISO-8859-1')
-    example.ensure_encoding!('UTF-8')
+    example.ensure_encoding('UTF-8')
     assert_equal 'Café', example
   end
   
   test "source has the wrong encoding and unjustly reports the target encoding" do
     example = example('iso_8859_1', :read_as => 'UTF-8')
-    example.ensure_encoding!('UTF-8')
+    example.ensure_encoding('UTF-8')
     assert_equal 'Café', example
   end
   
   test "source has the wrong encoding and reports something different from its actual encoding" do
     example = example('iso_8859_1', :read_as => 'Shift_JIS')
-    example.ensure_encoding!('UTF-8')
+    example.ensure_encoding('UTF-8')
     assert_equal 'Café', example
   end
 end
