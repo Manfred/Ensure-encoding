@@ -1,0 +1,13 @@
+# encoding: utf-8
+
+recipe :ignore
+ignore(/.DS_Store$/)
+
+recipe :ruby
+# process do |files|
+#   Ruby.run_tests(files.take_and_map do |file|
+#     case file
+#     when %r{}
+#     end
+#   end)
+# end

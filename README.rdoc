@@ -1,0 +1,4 @@
+= Ensure Encoding
+
+Experimental project to find the best way to ensure a preferred encoding in
+Strings coming from untrusted sources.
