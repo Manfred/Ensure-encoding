@@ -10,6 +10,8 @@ require 'encoding'
 module EncodingTestHelpers
   EXAMPLES = {
     'UTF-8'      => '℻',
+    'UTF-16LE'   => '☺',
+    'UTF-16BE'   => '☺',
     'ISO-8859-1' => 'Café',
     'Shift_JIS'  => 'こにちわ'
   }
@@ -36,7 +38,7 @@ class EncodingTest < ActiveSupport::TestCase
       examples.each do |e|
         source, expected = example(e, :read_as => source_encoding)
         source.ensure_encoding('UTF-8')
-        assert_equal(expected, source)
+        assert_equal(expected, source, "When testing example #{e}, with source encoding #{source_encoding}")
       end
     end
   end
@@ -45,7 +47,7 @@ class EncodingTest < ActiveSupport::TestCase
     (examples - ['UTF-8']).each do |e|
       source, expected = example(e, :read_as => e)
       source.ensure_encoding('UTF-8')
-      assert_equal(expected, source)
+      assert_equal(expected, source, "When testing example #{e}")
     end
   end
   
@@ -53,7 +55,7 @@ class EncodingTest < ActiveSupport::TestCase
     (examples - ['UTF-8']).each do |e|
       source, expected = example(e, :read_as => 'UTF-8')
       source.ensure_encoding('UTF-8')
-      assert_equal(expected, source)
+      assert_equal(expected, source, "When testing example #{e}")
     end
   end
   
@@ -61,7 +63,7 @@ class EncodingTest < ActiveSupport::TestCase
     (examples - ['UTF-8']).each do |e|
       source, expected = example(e, :read_as => Encoding::KOI8_R)
       source.ensure_encoding('UTF-8')
-      assert_equal(source, expected)
+      assert_equal(source, expected, "When testing example #{e}")
     end
   end
 end
