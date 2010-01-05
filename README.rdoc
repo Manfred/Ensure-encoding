@@ -2,3 +2,15 @@
 
 Experimental project to find the best way to ensure a preferred encoding in
 Strings coming from untrusted sources.
+
+== Limitations
+
+Guessing encoding is very hard and it's likely to fail. So when we have to
+guess you might end up with something you don't want. For example, let's assume
+you have a String with UTF-16 little endian data and no byte order mark, but it
+lists its encoding as US-ASCII. When you try to ensure UTF-8 in your application
+we might guess that it is already in UTF-8. The result will be garbled when you
+show it to a user although it is actually a valid UTF-8 byte sequence.
+
+Note that this is not very likely to happen, and when it does your application
+will not break.
