@@ -26,7 +26,7 @@ describe "Ensure::Encoding, concerning force_encoding" do
   it "should transcode the character data when it's not in the target encoding" do
     example, data_in_utf8 = example('ISO-8859-1')
     
-    result = Ensure::Encoding.force_encoding(example, 'UTF-8')
+    result = Ensure::Encoding.force_encoding(example, 'UTF-8', :invalid_characters => :transcode)
     result.encoding.should == Encoding::UTF_8
     result.should == data_in_utf8
   end

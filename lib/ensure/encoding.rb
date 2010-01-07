@@ -2,37 +2,60 @@
 
 module Ensure
   module Encoding
-    def self.force_encoding!(string, target_encoding, options=[])
-      target_encoding = ::Encoding.find(target_encoding)
-      
-      # Don't do anything if it's already encoded in the target encoding
-      return if (target_encoding == string.encoding) and string.valid_encoding?
-      
-      reported_encoding = string.encoding
-      
-      # Change the encoding property if that's the only thing incorrect
-      string.force_encoding(target_encoding)
-      return string if string.valid_encoding?
-      
-      # Assume the reported encoding was correct and transcode
-      begin
-        string.force_encoding(reported_encoding)
-        string.encode!(target_encoding)
-        return
-      rescue ::Encoding::InvalidByteSequenceError, ::Encoding::UndefinedConversionError
-      end
-      
-      raise ::Encoding::InvalidByteSequenceError, "Can't ensure preferred encoding `#{target_encoding}'"
+    def self.sniff_encoding(string)
+      ::Encoding::UTF_8
     end
     
-    def self.force_encoding(string, target_encoding, options=[])
+    def self.guess_encoding(string, guesses)
+      original_encoding = string.encoding
+      guessed_encoding = nil
+      
+      guesses.each do |guess|
+        string.force_encoding(guess)
+        if string.valid_encoding?
+          guessed_encoding = string.encoding
+          break
+        end
+      end
+      
+      string.force_encoding(original_encoding)
+      guessed_encoding
+    end
+    
+    def self.force_encoding!(string, target_encoding, options={})
+      internal_encoding = ::Encoding.find(target_encoding)
+      
+      if options[:external_encoding] == :sniff
+        external_encoding = sniff_encoding(string)
+      else
+        external_encoding = options[:external_encoding] || [internal_encoding, string.encoding]
+      end
+      
+      if external_encoding.respond_to?(:each)
+        external_encoding = guess_encoding(string, external_encoding) || internal_encoding
+      end
+      
+      case options[:invalid_characters]
+      when :transcode
+        string.force_encoding(external_encoding)
+        string.encode!(internal_encoding)
+      when :drop
+        string.force_encoding(external_encoding)
+        string.encode!(internal_encoding, 'something')
+      else
+        string.force_encoding(internal_encoding)
+        raise ::Encoding::InvalidByteSequenceError, "String is not encoded as `#{internal_encoding}'" unless string.valid_encoding?
+      end
+    end
+    
+    def self.force_encoding(string, target_encoding, options={})
       target_string = string.dup
       force_encoding!(target_string, target_encoding, options)
       target_string
     end
     
     module String
-      def ensure_encoding(target_encoding, options=[])
+      def ensure_encoding(target_encoding, options={})
         Ensure::Encoding.force_encoding(self, target_encoding, options)
       end
     end
