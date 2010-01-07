@@ -41,3 +41,55 @@ words, it contains data valid for the specified encoding.
 
   example.ensure_encoding('UTF-8')
   example.encoding => #<Encoding:UTF-8>
+
+Beyond this you can specify a number of options to perform more operations
+to make sure the data in the string didn't become unreadable garbage. Let's
+look at a number of situations.
+
+=== Untrusted source with known encoding
+
+For instance, when you're excepting data from browsers you can be pretty sure
+the character data is properly encoded. When someone does send bad data it's
+probably a hacker and you can discard the request.
+
+  example.ensure_encoding('UTF-8',
+    :external_encoding  => 'UTF-8,
+    :invalid_characters => :raise
+  )
+
+=== Friendly source with known encoding
+
+In this scenario you're connecting to web API through a ReST library and you
+know the encoding of the source data because it's in the headers. However
+you're not sure the encoding of the strings is valid.
+
+  example.ensure_encoding(Encoding::UTF_8
+    :external_encoding  => Encoding::UTF_8,
+    :invalid_characters => :drop
+  )
+
+=== Untrusted source with variable encoding
+
+Assume we have a legacy database and some of the fields contain Shift JIS,
+while some of the newer fields contain UTF-8 because someone screwed up the
+server configuration. You're not even sure the encoding property on the
+strings you got make any sense because your database adapter is confused too.
+
+  example.ensure_encoding('UTF-8',
+    :external_encoding  => [Encoding::Shift_JIS, Encoding::UTF_8],
+    :invalid_characters => :transcode
+  )
+
+=== Untrusted source with unknown encoding
+
+As a last resort you're trying to read some random files from disk and you
+have no idea what the external encoding is. You've just read them as binary
+and are hoping to make some sense from the data.
+
+  example.ensure_encoding('UTF-8',
+    :external_encoding  => :sniff,
+    :invalid_characters => :transcode
+  )
+
+Note that the encoding sniffer is currently very naive and might not always be
+of any help.
