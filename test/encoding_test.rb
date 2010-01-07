@@ -10,8 +10,6 @@ require 'encoding'
 module EncodingTestHelpers
   EXAMPLES = {
     'UTF-8'      => 'पशुपतिरपि तान्यहानि कृच्छ्राद्',
-    # 'UTF-16LE'   => 'Ἰοὺ ἰού· τὰ πάντʼ ἂν ἐξήκοι σαφῆ.',
-    # 'UTF-16BE'   => 'По оживлённым берегам',
     'ISO-8859-1' => 'Prévisions météo de Météo-France',
     'Shift_JIS'  => 'こにちわ'
   }
@@ -30,7 +28,7 @@ module EncodingTestHelpers
   end
 end
 
-class EncodingTest < ActiveSupport::TestCase
+class EnsureEncodingTest < ActiveSupport::TestCase
   include EncodingTestHelpers
   
   test "string has wrong encoding property but preferred encoding data" do
@@ -87,6 +85,17 @@ class EncodingTest < ActiveSupport::TestCase
       example = [0x00, 0xff].pack('C*')
       example.force_encoding(Encoding::US_ASCII)
       example.ensure_encoding('UTF-8')
+    end
+  end
+end
+
+class SniffEncodingTest < ActiveSupport::TestCase
+  include EncodingTestHelpers
+  
+  test "properly sniffs encoding for a number of examples" do
+    ['UTF-8', 'UTF-16LE', 'UTF-16BE'].each do |e|
+      source, _ = example(e, :read_as => Encoding::US_ASCII)
+      assert_equal(Encoding.find(e), source.sniffed_encoding)
     end
   end
 end
