@@ -13,9 +13,9 @@ To ensure that our internal encoding is always at least valid we can choose to
 do one of two things.
 
 1. Throw an exception when we receive invalid character data. (ie. Our internal
-encoding is UTF-8 and we receive Latin-1 data or invalid UTF-8)
+   encoding is UTF-8 and we receive Latin-1 data or invalid UTF-8)
 2. Accept whatever we get and try to mold it in such a way that it becomes
-usable in our application.
+   usable in our application.
 
 It is generally accepted to go for the second option, most of the times the
 end-user has no way of solving these problems because a vendor made a mistake.
