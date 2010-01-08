@@ -2,7 +2,19 @@
 
 module Ensure
   module Encoding
+    BYTE_ORDER_MARKS = {
+      ::Encoding::UTF_16BE => [0xfe, 0xff],
+      ::Encoding::UTF_16LE => [0xff, 0xfe],
+      ::Encoding::UTF_8    => [0xef, 0xbb, 0xbf]
+    }
+    
     def self.sniff_encoding(string)
+      first_bytes = unpack('C3')
+      BYTE_ORDER_MARKS.each do |encoding, bytes|
+        if first_bytes[0...bytes.length] == bytes
+          return encoding
+        end
+      end
       ::Encoding::UTF_8
     end
     
