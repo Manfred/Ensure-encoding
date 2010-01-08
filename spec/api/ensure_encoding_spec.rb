@@ -96,3 +96,17 @@ describe "Ensure::Encoding, concerning force_encoding with the invalid_character
     }.should.raise(Encoding::InvalidByteSequenceError)
   end
 end
+
+describe "Ensure::Encoding, concerning encoding_to_name" do
+  it "should convert an encoding to a name" do
+    [Encoding::UTF_8, Encoding::UTF_16LE].each do |encoding|
+      Ensure::Encoding.encoding_to_name(encoding).should == encoding.name
+    end
+  end
+  
+  it "should convert a string with an encoding to an encoding name" do
+    ['UTF-8', 'UTF-16LE'].each do |encoding|
+      Ensure::Encoding.encoding_to_name(encoding).should == encoding
+    end
+  end
+end
