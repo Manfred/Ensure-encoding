@@ -2,12 +2,6 @@
 
 module Ensure
   module Encoding
-    VALID_PADDING = '  '.force_encoding(::Encoding::US_ASCII)
-    
-    def self.encoding_to_name(encoding)
-      encoding.respond_to?(:name) ? encoding.name : encoding
-    end
-    
     def self.sniff_encoding(string)
       ::Encoding::UTF_8
     end
