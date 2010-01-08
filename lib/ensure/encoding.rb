@@ -36,15 +36,15 @@ module Ensure
       end
       
       case options[:invalid_characters]
-      when :transcode
-        string.force_encoding(external_encoding)
-        string.encode!(internal_encoding)
+      when :raise
+        string.force_encoding(internal_encoding)
+        raise ::Encoding::InvalidByteSequenceError, "String is not encoded as `#{internal_encoding}'" unless string.valid_encoding?
       when :drop
         string.force_encoding(external_encoding)
         string.encode!(internal_encoding, 'something')
-      else
-        string.force_encoding(internal_encoding)
-        raise ::Encoding::InvalidByteSequenceError, "String is not encoded as `#{internal_encoding}'" unless string.valid_encoding?
+      else # :transcode
+        string.force_encoding(external_encoding)
+        string.encode!(internal_encoding)
       end
     end
     
