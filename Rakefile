@@ -6,6 +6,7 @@ unless ''.respond_to?(:encoding)
 end
 
 require 'rake/testtask'
+require 'rake/rdoctask'
 
 desc 'Run specs by default'
 task :default => :spec
@@ -15,4 +16,12 @@ Rake::TestTask.new(:spec) do |t|
   t.libs << 'lib'
   t.pattern = 'spec/**/*_spec.rb'
   t.verbose = true
+end
+
+namespace :documentation do
+  Rake::RDocTask.new(:generate) do |rd|
+    rd.main = "README.rdoc"
+    rd.rdoc_files.include("README.rdoc", "LICENSE", "lib/**/*.rb")
+    rd.options << "--all" << "--charset" << "utf-8"
+  end
 end
