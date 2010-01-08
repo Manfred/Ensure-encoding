@@ -8,7 +8,7 @@ process do |files|
   Ruby.run_tests(files.take_and_map do |file|
     case file
     when %r{lib/(.*)\.rb}
-      Dir.glob('spec/api/**/*.rb')
+      Dir.glob('spec/**/*_spec.rb')
     end
   end)
 end

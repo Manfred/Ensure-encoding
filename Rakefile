@@ -7,12 +7,12 @@ end
 
 require 'rake/testtask'
 
-desc 'Run tests by default'
-task :default => :test
+desc 'Run specs by default'
+task :default => :spec
 
-desc 'Test encoding utilities'
-Rake::TestTask.new(:test) do |t|
+desc 'Run all specs'
+Rake::TestTask.new(:spec) do |t|
   t.libs << 'lib'
-  t.pattern = 'test/*_test.rb'
+  t.pattern = 'spec/**/*_spec.rb'
   t.verbose = true
 end
