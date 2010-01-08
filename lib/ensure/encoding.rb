@@ -1,7 +1,15 @@
 # encoding: utf-8
 
+require 'iconv'
+
 module Ensure
   module Encoding
+    VALID_PADDING = '  '.force_encoding(::Encoding::US_ASCII)
+    
+    def self.encoding_to_name(encoding)
+      encoding.respond_to?(:name) ? encoding.name : encoding
+    end
+    
     def self.sniff_encoding(string)
       ::Encoding::UTF_8
     end
@@ -23,28 +31,33 @@ module Ensure
     end
     
     def self.force_encoding!(string, target_encoding, options={})
-      internal_encoding = ::Encoding.find(target_encoding)
-      
       if options[:external_encoding] == :sniff
         external_encoding = sniff_encoding(string)
       else
-        external_encoding = options[:external_encoding] || [internal_encoding, string.encoding]
+        external_encoding = options[:external_encoding] || [target_encoding, string.encoding]
       end
       
       if external_encoding.respond_to?(:each)
-        external_encoding = guess_encoding(string, external_encoding) || internal_encoding
+        external_encoding = guess_encoding(string, external_encoding) || target_encoding
       end
       
-      case options[:invalid_characters]
-      when :raise
-        string.force_encoding(internal_encoding)
-        raise ::Encoding::InvalidByteSequenceError, "String is not encoded as `#{internal_encoding}'" unless string.valid_encoding?
-      when :drop
-        string.force_encoding(external_encoding)
-        string.encode!(internal_encoding, 'something')
-      else # :transcode
-        string.force_encoding(external_encoding)
-        string.encode!(internal_encoding)
+      if options[:invalid_characters] == :raise
+        string.force_encoding(target_encoding)
+        raise ::Encoding::InvalidByteSequenceError, "String is not encoded as `#{target_encoding}'" unless string.valid_encoding?
+      else
+        command = encoding_to_name(target_encoding)
+        command << '//IGNORE//TRANSLIT' if options[:invalid_characters] == :drop
+        converter = Iconv.new(command, encoding_to_name(external_encoding))
+        begin
+          begin
+            string.replace converter.iconv(string)
+          rescue Iconv::InvalidCharacter
+            string.force_encoding(::Encoding::US_ASCII)
+            string.replace converter.iconv(string + VALID_PADDING).rstrip
+          end
+        rescue Iconv::IllegalSequence => e
+          raise ::Encoding::InvalidByteSequenceError, e.message
+        end
       end
     end
     
