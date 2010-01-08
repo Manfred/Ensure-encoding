@@ -16,7 +16,7 @@ module EncodingTestHelpers
   EXAMPLES = {
     'UTF-8'      => 'पशुपतिरपि तान्यहानि कृच्छ्राद्',
     'ISO-8859-1' => 'Prévisions météo de Météo-France',
-    'Shift_JIS'  => 'こにちわ',
+    'Shift_JIS'  => 'こんにちは',
     # 'UTF-16LE'   => '',
     # 'UTF-16BE'   => ''
   }
