@@ -1,7 +1,5 @@
 # encoding: utf-8
 
-require 'iconv'
-
 module Ensure
   module Encoding
     VALID_PADDING = '  '.force_encoding(::Encoding::US_ASCII)
@@ -45,19 +43,8 @@ module Ensure
         string.force_encoding(target_encoding)
         raise ::Encoding::InvalidByteSequenceError, "String is not encoded as `#{target_encoding}'" unless string.valid_encoding?
       else
-        command = encoding_to_name(target_encoding)
-        command << '//IGNORE//TRANSLIT' if options[:invalid_characters] == :drop
-        converter = Iconv.new(command, encoding_to_name(external_encoding))
-        begin
-          begin
-            string.replace converter.iconv(string)
-          rescue Iconv::InvalidCharacter
-            string.force_encoding(::Encoding::US_ASCII)
-            string.replace converter.iconv(string + VALID_PADDING).rstrip
-          end
-        rescue Iconv::IllegalSequence => e
-          raise ::Encoding::InvalidByteSequenceError, e.message
-        end
+        filters = (options[:invalid_characters] == :drop) ? { :replace => '', :undef => :replace, :invalid => :replace } : {}
+        string.encode!(target_encoding, external_encoding, filters)
       end
     end
     

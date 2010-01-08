@@ -74,19 +74,25 @@ describe "Ensure::Encoding, concerning force_encoding with the invalid_character
   
   it "should raise an exception on invalid characters when asked to do so" do
     lambda {
-      Ensure::Encoding.force_encoding(@invalid_utf_8_and_utf_16, 'UTF-8', :invalid_characters => :raise)
+      Ensure::Encoding.force_encoding(@invalid_utf_8_and_utf_16, 'UTF-8',
+        :external_encoding => Encoding::UTF_16LE,
+        :invalid_characters => :raise)
     }.should.raise(Encoding::InvalidByteSequenceError)
   end
   
   it "should drop invalid characters when asked to do so" do
-    result = Ensure::Encoding.force_encoding(@invalid_utf_8_and_utf_16, 'UTF-8', :invalid_characters => :drop)
+    result = Ensure::Encoding.force_encoding(@invalid_utf_8_and_utf_16, 'UTF-8',
+      :external_encoding => Encoding::UTF_16LE,
+      :invalid_characters => :drop)
     result.valid_encoding?.should == true
-    result.should == ''
+    string_to_codepoints(result).should == ["0xf5c0"] # Random character in the private use area
   end
   
   it "should raise an exception on invalid characters when just asked to transcode" do
     lambda {
-      Ensure::Encoding.force_encoding(@invalid_utf_8_and_utf_16, 'UTF-8', :invalid_characters => :transcode)
+      Ensure::Encoding.force_encoding(@invalid_utf_8_and_utf_16, 'UTF-8',
+        :external_encoding => Encoding::UTF_16LE,
+        :invalid_characters => :transcode)
     }.should.raise(Encoding::InvalidByteSequenceError)
   end
 end

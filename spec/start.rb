@@ -33,6 +33,18 @@ module EncodingTestHelpers
     contents.force_encoding(options[:mark_as] || Encoding.find(name))
     return contents, EXAMPLES[name]
   end
+  
+  def integer_array_to_hex(ints)
+    ints.map { |i| "0x#{i.to_s(16)}" }
+  end
+  
+  def string_to_bytes(string)
+    integer_array_to_hex string.unpack('C*')
+  end
+  
+  def string_to_codepoints(string)
+    integer_array_to_hex string.unpack('U*')
+  end
 end
 
 class Test::Unit::TestCase
