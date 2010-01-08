@@ -58,6 +58,10 @@ module Ensure
       def ensure_encoding(target_encoding, options={})
         Ensure::Encoding.force_encoding(self, target_encoding, options)
       end
+      
+      def ensure_encoding!(target_encoding, options={})
+        Ensure::Encoding.force_encoding!(self, target_encoding, options)
+      end
     end
   end
 end
