@@ -97,6 +97,18 @@ describe "Ensure::Encoding, concerning force_encoding with the invalid_character
   end
 end
 
+describe "Ensure::Encoding, concerning force_encoding!" do
+  it "should work just like force_encoding, only do an in-place replacement" do
+    example, data_in_utf8 = example('ISO-8859-1')
+    example.encoding.should == Encoding::ISO_8859_1
+    
+    result = Ensure::Encoding.force_encoding(example, 'UTF-8')
+    example.encoding.should == Encoding::ISO_8859_1
+    Ensure::Encoding.force_encoding!(example, 'UTF-8')
+    result.should == example
+  end
+end
+
 describe "Ensure::Encoding, concerning encoding_to_name" do
   it "should convert an encoding to a name" do
     [Encoding::UTF_8, Encoding::UTF_16LE].each do |encoding|
