@@ -25,3 +25,14 @@ namespace :documentation do
     rd.options << "--all" << "--charset" << "utf-8"
   end
 end
+
+namespace :gem do
+  desc "Build the gem"
+  task :build do
+    sh 'gem build ensure-encoding.gemspec'
+  end
+  
+  task :install => :build do
+    sh 'gem install ensure-encoding-*.gem'
+  end
+end
