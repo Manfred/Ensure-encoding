@@ -7,7 +7,7 @@ describe "Ensure::Encoding, concerning sniff_encoding" do
     [
       ['UTF-8', Encoding::UTF_8],
       ['UTF-16LE', Encoding::UTF_16LE],
-      ['UTF-16BE', Encoding::UTF_18BE]
+      ['UTF-16BE', Encoding::UTF_16BE]
     ].each do |source, expected|
       e, _ = example(source)
       Ensure::Encoding.sniff_encoding(e).should == expected

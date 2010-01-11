@@ -9,8 +9,6 @@ require 'fileutils'
 $:.unshift(File.expand_path('../../lib', __FILE__))
 
 require 'ensure'
-require 'core_ext'
-
 
 module EncodingTestHelpers
   EXAMPLES = {

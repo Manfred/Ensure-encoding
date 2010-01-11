@@ -11,7 +11,7 @@ module Ensure
     # Tries to guess the encoding of the string and returns the most likely
     # encoding.
     def self.sniff_encoding(string)
-      first_bytes = unpack('C3')
+      first_bytes = string.unpack('C3')
       BYTE_ORDER_MARKS.each do |encoding, bytes|
         if first_bytes[0...bytes.length] == bytes
           return encoding
@@ -125,4 +125,8 @@ module Ensure
       end
     end
   end
+end
+
+class String
+  include Ensure::Encoding::String
 end
