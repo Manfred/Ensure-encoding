@@ -1,7 +1,7 @@
 # encoding: utf-8
 
 require 'rubygems' rescue LoadError
-require 'test/spec'
+require 'bacon'
 require 'mocha'
 
 require 'fileutils'
@@ -45,6 +45,6 @@ module EncodingTestHelpers
   end
 end
 
-class Test::Unit::TestCase
+class Bacon::Context
   include EncodingTestHelpers
 end
