@@ -14,7 +14,9 @@ task :default => :spec
 desc 'Run all specs'
 task :spec do
   ruby = File.join(*Config::CONFIG.values_at('bindir', 'ruby_install_name'))
-  sh "#{ruby} spec/**/*_spec.rb"
+  FileList[File.expand_path('../spec/**/*_spec.rb', __FILE__)].each do |spec|
+    sh "#{ruby} #{spec}"
+  end
 end
 
 namespace :documentation do

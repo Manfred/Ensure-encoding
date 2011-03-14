@@ -8,7 +8,7 @@ require 'fileutils'
 
 $:.unshift(File.expand_path('../../lib', __FILE__))
 
-require 'ensure'
+require 'ensure/encoding'
 
 module EncodingTestHelpers
   EXAMPLES = {
@@ -23,11 +23,17 @@ module EncodingTestHelpers
     EXAMPLES.keys
   end
   
-  def example(name, options={})
-    filename, contents = name.gsub(/-/, '_').downcase, ''
-    File.open(File.expand_path("../examples/#{filename}.txt", __FILE__), 'r:binary') do |file|
+  def read_example(filename)
+    contents = ''
+    File.open(filename, 'r:binary') do |file|
       contents << file.read
     end
+    contents
+  end
+  
+  def example(name, options={})
+    filename, contents = name.gsub(/-/, '_').downcase, ''
+    contents = read_example(File.expand_path("../examples/#{filename}.txt", __FILE__))
     contents.force_encoding(options[:mark_as] || Encoding.find(name))
     return contents, EXAMPLES[name]
   end
