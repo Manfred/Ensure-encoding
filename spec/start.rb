@@ -48,3 +48,6 @@ end
 class Bacon::Context
   include EncodingTestHelpers
 end
+
+Bacon.extend Bacon::TestUnitOutput
+Bacon.summary_on_exit

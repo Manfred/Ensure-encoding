@@ -5,17 +5,16 @@ unless ''.respond_to?(:encoding)
   exit 1
 end
 
-require 'rake/testtask'
 require 'rake/rdoctask'
+require 'rbconfig'
 
 desc 'Run specs by default'
 task :default => :spec
 
 desc 'Run all specs'
-Rake::TestTask.new(:spec) do |t|
-  t.libs << 'lib'
-  t.pattern = 'spec/**/*_spec.rb'
-  t.verbose = true
+task :spec do
+  ruby = File.join(*Config::CONFIG.values_at('bindir', 'ruby_install_name'))
+  sh "#{ruby} spec/**/*_spec.rb"
 end
 
 namespace :documentation do
