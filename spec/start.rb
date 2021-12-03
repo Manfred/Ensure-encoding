@@ -2,7 +2,7 @@
 
 require 'rubygems' rescue LoadError
 require 'bacon'
-require 'mocha'
+require 'mocha-on-bacon' # https://github.com/alloy/mocha-on-bacon
 
 require 'fileutils'
 
