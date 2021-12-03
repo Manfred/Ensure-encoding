@@ -64,7 +64,7 @@ module Ensure
         raise ::Encoding::InvalidByteSequenceError, "String is not encoded as `#{target_encoding}'" unless string.valid_encoding?
       else
         filters = (options[:invalid_characters] == :drop) ? { :replace => '', :undef => :replace, :invalid => :replace } : {}
-        string.encode!(target_encoding, external_encoding, filters)
+        string.encode!(target_encoding, external_encoding, **filters)  # https://piechowski.io/post/last-arg-keyword-deprecated-ruby-2-7/
       end
     end
     
