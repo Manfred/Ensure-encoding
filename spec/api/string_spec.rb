@@ -20,4 +20,24 @@ describe "String, extended with Ensure::Encoding::String" do
     example.ensure_encoding!('ISO-8859-1')
     example.encoding.should == Encoding::ISO_8859_1
   end
+
+  it "should force encoding to UTF-16LE" do
+    example = 'Café'
+
+    result = example.ensure_encoding('UTF-16LE')
+    result.encoding.should == Encoding::UTF_16LE
+
+    example.ensure_encoding!('UTF-16LE')
+    example.encoding.should == Encoding::UTF_16LE
+  end
+
+  it "should force encoding to UTF-16BE" do
+    example = 'Café'
+
+    result = example.ensure_encoding('UTF-16BE')
+    result.encoding.should == Encoding::UTF_16BE
+
+    example.ensure_encoding!('UTF-16BE')
+    example.encoding.should == Encoding::UTF_16BE
+  end
 end

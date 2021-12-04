@@ -50,6 +50,24 @@ describe "Ensure::Encoding, concerning force_encoding with the external_encoding
     result.should == data_in_utf8
   end
   
+  it "should sniff encoding from the UTF-16LE character data" do
+    example, data_in_utf8 = example('UTF-16LE')
+    bom = Ensure::Encoding::BYTE_ORDER_MARKS[::Encoding::UTF_8].pack("C3").force_encoding('UTF-8')
+
+    result = Ensure::Encoding.force_encoding(example, Encoding::UTF_8, :external_encoding => :sniff)
+    result.encoding.should == Encoding::UTF_8
+    result.should == bom + data_in_utf8
+  end
+
+  it "should sniff encoding from the UTF-16BE character data" do
+    example, data_in_utf8 = example('UTF-16BE')
+    bom = Ensure::Encoding::BYTE_ORDER_MARKS[::Encoding::UTF_8].pack("C3").force_encoding('UTF-8')
+
+    result = Ensure::Encoding.force_encoding(example, Encoding::UTF_8, :external_encoding => :sniff)
+    result.encoding.should == Encoding::UTF_8
+    result.should == bom + data_in_utf8
+  end
+
   it "should guess the encoding from the character data by trying the specified external encodings" do
     example, data_in_utf8 = example('Shift_JIS')
     result = Ensure::Encoding.force_encoding(example, Encoding::UTF_8, :external_encoding => [
