@@ -16,7 +16,6 @@ Gem::Specification.new do |spec|
 
   spec.files = FileList['README.rdoc', 'LICENSE', 'lib/**/*.rb'].to_a
 
-  spec.has_rdoc = true
   spec.extra_rdoc_files = ['README.rdoc', 'LICENSE']
   spec.rdoc_options << "--all" << "--charset" << "utf-8"
 end
