@@ -5,7 +5,7 @@ unless ''.respond_to?(:encoding)
   exit 1
 end
 
-require 'rake/rdoctask'
+require 'rdoc/task'
 require 'rbconfig'
 
 desc 'Run specs by default'
@@ -13,7 +13,7 @@ task :default => :spec
 
 desc 'Run all specs'
 task :spec do
-  ruby = File.join(*Config::CONFIG.values_at('bindir', 'ruby_install_name'))
+  ruby = File.join(*RbConfig::CONFIG.values_at('bindir', 'ruby_install_name'))
   FileList[File.expand_path('../spec/**/*_spec.rb', __FILE__)].each do |spec|
     sh "#{ruby} #{spec}"
   end
